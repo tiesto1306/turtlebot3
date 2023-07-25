@@ -19,9 +19,13 @@
 #include <memory>
 #include <string>
 
-using robotis::turtlebot3::TurtleBot3;
-using namespace std::chrono_literals;
+// using robotis::turtlebot3::TurtleBot3;
+// using namespace std::chrono_literals;
 
+namespace robotis
+{
+namespace turtlebot3
+{
 TurtleBot3::TurtleBot3(const std::string & usb_port)
 : Node("turtlebot3_node", rclcpp::NodeOptions().use_intra_process_comms(true))
 {
@@ -359,3 +363,5 @@ void TurtleBot3::cmd_vel_callback()
     }
   );
 }
+}  // namespace turtlebot3
+}  // namespace robotis
