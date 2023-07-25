@@ -35,13 +35,13 @@ def generate_launch_description():
     LDS_LAUNCH_FILE = '/hlds_laser.launch.py'
 
     usb_port = LaunchConfiguration('usb_port', default='/dev/ttyACM0')
-
-    tb3_param_dir = LaunchConfiguration(
-        'tb3_param_dir',
-        default=os.path.join(
-            get_package_share_directory('turtlebot3_bringup'),
-            'param',
-            TURTLEBOT3_MODEL + '.yaml'))
+    tb3_param_dir = LaunchConfiguration('tb3_param_dir')
+    # tb3_param_dir = LaunchConfiguration(
+    #     'tb3_param_dir',
+    #     default=os.path.join(
+    #         get_package_share_directory('turtlebot3_bringup'),
+    #         'param',
+    #         TURTLEBOT3_MODEL + '.yaml'))
 
     if LDS_MODEL == 'LDS-01':
         lidar_pkg_dir = LaunchConfiguration(
@@ -70,9 +70,17 @@ def generate_launch_description():
             default_value=usb_port,
             description='Connected USB port with OpenCR'),
 
+        # DeclareLaunchArgument(
+        #     'tb3_param_dir',
+        #     default_value=tb3_param_dir,
+        #     description='Full path to turtlebot3 parameter file to load'),
+
         DeclareLaunchArgument(
             'tb3_param_dir',
-            default_value=tb3_param_dir,
+            default=os.path.join(
+                get_package_share_directory('turtlebot3_bringup'),
+                'param',
+                TURTLEBOT3_MODEL + '.yaml'),
             description='Full path to turtlebot3 parameter file to load'),
 
         DeclareLaunchArgument(
