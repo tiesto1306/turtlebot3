@@ -77,7 +77,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             'tb3_param_dir',
-            default=os.path.join(
+            default_value=os.path.join(
                 get_package_share_directory('turtlebot3_bringup'),
                 'param',
                 TURTLEBOT3_MODEL + '.yaml'),
