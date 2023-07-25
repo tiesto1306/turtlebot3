@@ -29,6 +29,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
+    multi_robot_name = LaunchConfiguration('multi_robot_name')
     TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
     LDS_MODEL = os.environ['LDS_MODEL']
     LDS_LAUNCH_FILE = '/hlds_laser.launch.py'
@@ -74,6 +75,11 @@ def generate_launch_description():
             default_value=tb3_param_dir,
             description='Full path to turtlebot3 parameter file to load'),
 
+        DeclareLaunchArgument(
+            'multi_robot_name',
+            default_value='',
+            description='Specifying namespace to node'),
+
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [ThisLaunchFileDir(), '/turtlebot3_state_publisher.launch.py']),
@@ -86,6 +92,7 @@ def generate_launch_description():
         ),
 
         Node(
+            namespace=multi_robot_name,
             package='turtlebot3_node',
             executable='turtlebot3_ros',
             parameters=[tb3_param_dir],
