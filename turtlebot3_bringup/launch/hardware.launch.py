@@ -18,7 +18,6 @@
 
 import os
 
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
@@ -50,10 +49,6 @@ def generate_launch_description():
             ]
         )
 
-    base_dir = LaunchConfiguration(
-        'base_dir',
-        default=os.path.join(get_package_share_directory('turtlebot3_bringup'), 'launch'))
-
     start_rviz = LaunchConfiguration('start_rviz')
     prefix = LaunchConfiguration('prefix')
     use_fake_hardware = LaunchConfiguration('use_fake_hardware')
@@ -75,7 +70,7 @@ def generate_launch_description():
             description='Start robot with fake hardware mirroring command to its states.'),
 
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([base_dir, '/base.launch.py']),
+            PythonLaunchDescriptionSource([ThisLaunchFileDir(), '/base.launch.py']),
             launch_arguments={
                 'start_rviz': start_rviz,
                 'prefix': prefix,
