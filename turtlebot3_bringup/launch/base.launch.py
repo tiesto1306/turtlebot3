@@ -34,7 +34,16 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
+    namespace = LaunchConfiguration('namespace')
     declared_arguments = []
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'namespace',
+            default_value='',
+            description='Specifying namespace of turtlebot3'
+        )
+    )
+
     declared_arguments.append(
         DeclareLaunchArgument(
             'start_rviz',
@@ -126,6 +135,7 @@ def generate_launch_description():
     )
 
     control_node = Node(
+        namespace=namespace,
         package='controller_manager',
         executable='ros2_control_node',
         parameters=[
@@ -140,6 +150,7 @@ def generate_launch_description():
         condition=UnlessCondition(use_sim))
 
     robot_state_pub_node = Node(
+        namespace=namespace,
         package='robot_state_publisher',
         executable='robot_state_publisher',
         parameters=[{'robot_description': urdf_file, 'use_sim_time': use_sim}],
@@ -147,6 +158,7 @@ def generate_launch_description():
     )
 
     rviz_node = Node(
+        namespace=namespace,
         package='rviz2',
         executable='rviz2',
         arguments=['-d', rviz_config_file],
@@ -155,6 +167,7 @@ def generate_launch_description():
     )
 
     joint_state_broadcaster_spawner = Node(
+        namespace=namespace,
         package='controller_manager',
         executable='spawner',
         arguments=['joint_state_broadcaster', '--controller-manager', '/controller_manager'],
@@ -162,6 +175,7 @@ def generate_launch_description():
     )
 
     diff_drive_controller_spawner = Node(
+        namespace=namespace,
         package='controller_manager',
         executable='spawner',
         arguments=['diff_drive_controller', '-c', '/controller_manager'],
@@ -170,6 +184,7 @@ def generate_launch_description():
     )
 
     imu_broadcaster_spawner = Node(
+        namespace=namespace,
         package='controller_manager',
         executable='spawner',
         arguments=['imu_broadcaster'],

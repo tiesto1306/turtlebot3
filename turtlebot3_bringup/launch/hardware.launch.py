@@ -30,6 +30,7 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
+    namespace = LaunchConfiguration('namespace')
     LDS_MODEL = os.environ['LDS_MODEL']
 
     if LDS_MODEL == 'LDS-01':
@@ -55,6 +56,10 @@ def generate_launch_description():
 
     return LaunchDescription([
         DeclareLaunchArgument(
+            'namespace',
+            default_value='',
+            description='Specifying namespace of turtlebot3'),
+        DeclareLaunchArgument(
             'start_rviz',
             default_value='false',
             description='Whether execute rviz2'),
@@ -72,6 +77,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([ThisLaunchFileDir(), '/base.launch.py']),
             launch_arguments={
+                'namespace': namespace,
                 'start_rviz': start_rviz,
                 'prefix': prefix,
                 'use_fake_hardware': use_fake_hardware,
@@ -85,6 +91,7 @@ def generate_launch_description():
                 ]
             ),
             launch_arguments={
+                'namespace': namespace,
                 'port': '/dev/ttyUSB0',
                 'frame_id': 'base_scan',
             }.items(),
