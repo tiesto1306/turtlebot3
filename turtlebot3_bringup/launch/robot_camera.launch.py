@@ -68,6 +68,11 @@ def generate_launch_description():
             description='Use simulation (Gazebo) clock if true'),
 
         DeclareLaunchArgument(
+            'urdf_file_name',
+            default_value=urdf_file_name,
+            description='The turtlebot3 URF file to load'),
+
+        DeclareLaunchArgument(
             'usb_port',
             default_value=usb_port,
             description='Connected USB port with OpenCR'),
