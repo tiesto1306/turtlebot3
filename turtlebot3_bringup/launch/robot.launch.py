@@ -35,6 +35,7 @@ def generate_launch_description():
     LDS_LAUNCH_FILE = '/hlds_laser.launch.py'
 
     usb_port = LaunchConfiguration('usb_port', default='/dev/ttyACM0')
+    # tb3_param_dir = LaunchConfiguration('tb3_param_dir')
     tb3_param_dir = LaunchConfiguration(
         'tb3_param_dir',
         default=os.path.join(
@@ -57,20 +58,12 @@ def generate_launch_description():
             default=os.path.join(get_package_share_directory('hls_lfcd_lds_driver'), 'launch'))
 
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
-    urdf_file_name = LaunchConfiguration(
-        'urdf_file_name',
-        default='turtlebot3_' + TURTLEBOT3_MODEL + '.urdf')
 
     return LaunchDescription([
         DeclareLaunchArgument(
             'use_sim_time',
             default_value=use_sim_time,
             description='Use simulation (Gazebo) clock if true'),
-
-        DeclareLaunchArgument(
-            'urdf_file_name',
-            default_value=urdf_file_name,
-            description='The turtlebot3 URF file to load'),
 
         DeclareLaunchArgument(
             'usb_port',
@@ -98,10 +91,7 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [ThisLaunchFileDir(), '/turtlebot3_state_publisher.launch.py']),
-            launch_arguments={
-                'use_sim_time': use_sim_time,
-                'urdf_file_name': urdf_file_name,
-                }.items(),
+            launch_arguments={'use_sim_time': use_sim_time}.items(),
         ),
 
         IncludeLaunchDescription(
