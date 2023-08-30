@@ -93,7 +93,7 @@ def generate_launch_description():
                 [ThisLaunchFileDir(), '/turtlebot3_state_publisher.launch.py']),
             launch_arguments={
                 'use_sim_time': use_sim_time,
-                'urdf_file_name': 'turtlebot3_' + TURTLEBOT3_MODEL + '.urdf',
+                'urdf_file_name': 'turtlebot3_' + TURTLEBOT3_MODEL + '_camera.urdf',
                 }.items(),
         ),
 
