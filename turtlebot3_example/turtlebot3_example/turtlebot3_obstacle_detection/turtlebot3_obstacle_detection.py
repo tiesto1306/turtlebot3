@@ -30,12 +30,14 @@ class Turtlebot3ObstacleDetection(Node):
 
     def __init__(self):
         super().__init__('turtlebot3_obstacle_detection')
+        print("TurtleBot3 Obstacle Detection")
 
         self.scan_ranges = []
         self.has_scan_received = False
 
-        self.stop_distance = 0.3  # m
-        self.linear_vel = 0.05  # m/s
+        self.stop_distance = 0.5  # m
+
+        self.tele_twist = Twist()
         
         qos = QoSProfile(depth=10)
 
@@ -46,6 +48,12 @@ class Turtlebot3ObstacleDetection(Node):
             'scan',
             self.scan_callback,
             qos_profile=qos_profile_sensor_data)
+        
+        self.cmd_vel_raw_sub = self.create_subscription(
+            Twist,
+            'cmd_vel_raw',
+            self.cmd_vel_raw_callback,
+            qos_profile=qos_profile_sensor_data)
 
         timer_period = 0.05
         self.timer = self.create_timer(timer_period, self.timer_callback)
@@ -54,21 +62,30 @@ class Turtlebot3ObstacleDetection(Node):
         self.scan_ranges = msg.ranges
         self.has_scan_received = True
 
+    def cmd_vel_raw_callback(self, msg):
+        self.tele_twist = msg
+
     def timer_callback(self):
         if self.has_scan_received is True:
             self.detect_obstacle()
 
     def detect_obstacle(self):
         twist = Twist()
-        obstacle_distance = min(self.scan_ranges)
+        left_range = int(len(self.scan_ranges) / 4)
+        right_range = int(len(self.scan_ranges) * 3 / 4)
+
+        obstacle_distance = \
+            min(
+                min(self.scan_ranges[0:left_range]),
+                min(self.scan_ranges[right_range:360])
+            )
 
         if obstacle_distance < self.stop_distance:
             twist.linear.x = 0.0
-            twist.angular.z = 0.0
+            twist.angular.z = self.tele_twist.angular.z
             self.get_logger().info("Turtlebot3 has stopped due to obstacles")
         else:
-            twist.linear.x = self.linear_vel
-            twist.angular.z = 0.0
+            twist = self.tele_twist
 
         self.cmd_vel_pub.publish(twist)
 
