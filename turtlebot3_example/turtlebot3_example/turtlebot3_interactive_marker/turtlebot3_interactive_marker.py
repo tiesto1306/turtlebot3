@@ -34,6 +34,12 @@ class Turtlebot3InteractiveMarker(Node):
 
     def __init__(self):
         super().__init__('turtlebot3_interactive_marker')
+
+        print("TurtleBot3 Interactive Markers")
+        print("----------------------------------------------")
+        print("Move red arrows while click the arrows")
+        print("----------------------------------------------")
+
         qos = QoSProfile(depth=10)
 
         self.odom = Odometry()
