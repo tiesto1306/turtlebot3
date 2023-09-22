@@ -33,6 +33,10 @@ class Turtlebot3PatrolServer(Node):
 
     def __init__(self):
         super().__init__('turtlebot3_patrol_server')
+
+        print("TurtleBot3 Patrol Server")
+        print("----------------------------------------------")
+
         self._action_server = ActionServer(
             self,
             Turtlebot3,
@@ -46,8 +50,10 @@ class Turtlebot3PatrolServer(Node):
         self.position = Point()
         self.rotation = 0.0
 
-        self.linear_x = 0.2
-        self.angular_z = 0.2
+        # self.linear_x = 0.2
+        # self.angular_z = 4.0 * math.pi / 100.0
+        self.linear_x = 1.0
+        self.angular_z = 4.0
 
         qos = QoSProfile(depth=10)
 
@@ -60,22 +66,26 @@ class Turtlebot3PatrolServer(Node):
         self.cmd_vel_pub.publish(self.twist)
 
     def go_front(self, position, length):
-        while(position < length):
+        while(1):
+            position += self.twist.linear.x
+            if position >= length:
+                break;
             self.twist.linear.x = self.linear_x
             self.twist.angular.z = 0.0
             self.cmd_vel_pub.publish(self.twist)
             
-            position += self.twist.linear.x
             time.sleep(1)
         self.init_twist()
 
     def turn(self, angle, target_angle):
-        while (angle < target_angle * math.pi / 180.0):
+        while (1):
+            angle += self.twist.angular.z
+            if (angle >= target_angle * math.pi / 180.0):
+                break;
             self.twist.linear.x = 0.0
             self.twist.angular.z = self.angular_z
             self.cmd_vel_pub.publish(self.twist)
 
-            angle += self.twist.angular.z
             time.sleep(1)
         self.init_twist()
 
@@ -110,6 +120,9 @@ class Turtlebot3PatrolServer(Node):
         return result
 
     def square(self, feedback_msg, goal_handle, length):
+        self.linear_x = 0.2
+        self.angular_z = 8 * (90.0 / 180.0) * math.pi / 100.0
+
         for i in range(4):
             self.position.x = 0.0
             self.angle = 0.0
@@ -124,6 +137,9 @@ class Turtlebot3PatrolServer(Node):
         self.init_twist()
 
     def triangle(self, feedback_msg, goal_handle, length):
+        self.linear_x = 0.2
+        self.angular_z = 4 * (120.0 / 180.0) * math.pi / 100.0
+
         for i in range(3):
             self.position.x = 0.0
             self.angle = 0.0

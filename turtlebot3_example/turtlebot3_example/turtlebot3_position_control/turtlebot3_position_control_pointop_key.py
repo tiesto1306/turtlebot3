@@ -31,7 +31,15 @@ class Turtlebot3PositionControlPointOpKey(Node):
 
     def __init__(self):
         super().__init__('turtlebot3_position_control_pointop_key')
-        
+
+        print("TurtleBot3 Position Control")
+        print("----------------------------------------------")
+        print("From the current pose,")
+        print("goal x: goal position x (unit: m)")
+        print("goal y: goal position y (unit: m)")
+        print("goal heading: goal orientation (range: -180 ~ 180, unit: deg)")
+        print("----------------------------------------------")
+
         self.goal_position = Point()
         self.goal_heading = 0.0
         self.position = Point()
@@ -148,10 +156,13 @@ class Turtlebot3PositionControlPointOpKey(Node):
 def main(args=None):
     rclpy.init()
     turtlebot3_position_control_pointop_key = Turtlebot3PositionControlPointOpKey()
-    rclpy.spin(turtlebot3_position_control_pointop_key)
-
-    turtlebot3_position_control_pointop_key.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.spin(turtlebot3_position_control_pointop_key)
+    except KeyboardInterrupt:
+        turtlebot3_position_control_pointop_key.get_logger().info("Keyboard Interrupt (SIGINT)")
+    finally: 
+        rclpy.shutdown()
+        turtlebot3_position_control_pointop_key.destroy_node()
 
 if __name__ == '__main__':
     main()

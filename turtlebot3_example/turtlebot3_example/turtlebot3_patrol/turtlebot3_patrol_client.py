@@ -28,19 +28,28 @@ class Turtlebot3PatrolClient(Node):
 
     def __init__(self):
         super().__init__('turtlebot3_patrol_client')
+
+        print("TurtleBot3 Patrol Client")
+        print("----------------------------------------------")
+        print("Input below")
+        print("mode: s: square, t: triangle")
+        print("travel_distance (unit: m)")
+        print("patrol_count")
+        print("----------------------------------------------")
+
         self._action_client = ActionClient(self, Turtlebot3, 'turtlebot3')
 
         self.mode = 1.0
-        self.area = 1.0
-        self.count = 1
+        self.travel_distance = 1.0
+        self.patrol_count = 1
 
-        self.mode, self.area, self.count = self.get_key()
+        self.mode, self.travel_distance, self.patrol_count = self.get_key()
         self.send_goal()
 
     def get_key(self):
-        mode = str(input("mode: "))
-        area = float(input("area: "))
-        count = int(input("count: "))
+        mode = str(input("mode(s: square, t: triangle): "))
+        travel_distance = float(input("travel_distance: "))
+        patrol_count = int(input("patrol_count: "))
 
         if mode == 's':
             mode = 1
@@ -52,13 +61,13 @@ class Turtlebot3PatrolClient(Node):
             self.get_logger().info("you selected wrong mode") 
             rclpy.shutdown()
 
-        return mode, area, count
+        return mode, travel_distance, patrol_count
 
     def send_goal(self):
         goal_msg = Turtlebot3.Goal()
         goal_msg.goal.x = float(self.mode)
-        goal_msg.goal.y = float(self.area)
-        goal_msg.goal.z = float(self.count)
+        goal_msg.goal.y = float(self.travel_distance)
+        goal_msg.goal.z = float(self.patrol_count)
 
         self._action_client.wait_for_server()
 
