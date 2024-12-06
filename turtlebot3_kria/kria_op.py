@@ -13,7 +13,7 @@ class Turtlebot3Kria(Node):
         """************************************************************
         ** Initialise variables
         ************************************************************"""
-        self.linear_velocity = 0.0  # unit: m/s
+        self.linear_velocity = 0.2  # unit: m/s
         self.angular_velocity = 0.0  # unit: m/s
         self.scan_ranges = []
         self.init_scan_state = False  # To get the initial scan data at the beginning
@@ -32,11 +32,6 @@ class Turtlebot3Kria(Node):
             'scan',
             self.scan_callback,
             qos_profile=qos_profile_sensor_data)
-        self.cmd_vel_raw_sub = self.create_subscription(
-            Twist,
-            'cmd_vel_raw',
-            self.cmd_vel_raw_callback,
-            qos)
         self.cmd_direction_sub = self.create_subscription(
             Twist,
             'cmd_direction',
@@ -50,7 +45,7 @@ class Turtlebot3Kria(Node):
             0.010,  # unit: s
             self.update_callback)
 
-        self.get_logger().info("Turtlebot3 obstacle detection node has been initialised.")
+        self.get_logger().info("Turtlebot3 Kria node has been initialised.")
 
     """*******************************************************************************
     ** Callback functions and relevant functions
@@ -59,12 +54,8 @@ class Turtlebot3Kria(Node):
         self.scan_ranges = msg.ranges
         self.init_scan_state = True
 
-    def cmd_vel_raw_callback(self, msg):
-        self.linear_velocity = msg.linear.x
-        self.angular_velocity = msg.angular.z
-
     def cmd_direction_callback(self):
-        pass
+        pass # implement stop and go callback
 
     def update_callback(self):
         if self.init_scan_state is True:
